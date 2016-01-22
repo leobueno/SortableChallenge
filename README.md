@@ -2,7 +2,7 @@
 
 System Requirements:
 
-1. must have java 1.6+ installed
+1. must have java 1.8 installed
 2. must have sbt installed
 
 To build and run the solution:
