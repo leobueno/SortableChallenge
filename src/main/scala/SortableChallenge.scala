@@ -445,10 +445,10 @@ object SortableChallenge {
     """.stripMargin
     )
 
-    println("saving matches to results.json\n")
+    println("saving matches to results.txt\n")
     saveResultsToFile(matched)
 
-    println("saving unmatched listings to unmatched.json\n")
+    println("saving unmatched listings to unmatched.txt\n")
     saveUnmatchedProductToFile(unmatched)
   }
 
