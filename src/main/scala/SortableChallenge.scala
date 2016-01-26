@@ -94,6 +94,10 @@ class HeuristicsProductMatcher(products: List[Product]) {
   // </editor-fold>
 
   /** Create our database of products
+    * There are 3 levels
+    *   manufacturer
+    *               -> indexes based on product model/family
+    *                                                         -> product
     * One or more index keys will be generated for each product and the Map will contain one or more entry for each product
     * For details on how the indexing keys are generated, check [[generateIndexingKeysAndProductTuples(Product)]]
     */
