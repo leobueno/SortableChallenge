@@ -485,7 +485,7 @@ object SortableChallenge {
     val resultsFile = new File("results.txt")
 
     // Group matches by model name
-    val results: Map[String, List[Listing]] = matched.groupBy(_._1.modelRaw).mapValues(_.map(_._2))
+    val results: Map[String, List[Listing]] = matched.groupBy(_._1.name).mapValues(_.map(_._2))
 
     resultsFile.write(
       results.map{
