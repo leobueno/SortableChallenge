@@ -9,7 +9,8 @@ To build and run the solution:
 
 clone or download and unpack repository 
 
-    git clone https://github.com/leobueno/SortableChallenge.git; cd SortableChallenge
+    git clone https://github.com/leobueno/SortableChallenge.git
+    cd SortableChallenge
 
 Run it using sbt
 
