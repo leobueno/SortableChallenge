@@ -97,7 +97,10 @@ class HeuristicsProductMatcher(products: List[Product]) {
     * One or more index keys will be generated for each product and the Map will contain one or more entry for each product
     * For details on how the indexing keys are generated, check [[generateIndexingKeysAndProductTuples(Product)]]
     */
-  val database: Map[String, Product] = products.flatMap(generateIndexingKeysAndProductTuples).toMap
+  val database: Map[String, Map[String,Product]] = products.groupBy(_.manufacturer).mapValues(
+    manufacturerProducts =>
+      manufacturerProducts.flatMap(generateIndexingKeysAndProductTuples).toMap
+  )
 
   /**
     * Finds the best product match for a listing
@@ -125,21 +128,19 @@ class HeuristicsProductMatcher(products: List[Product]) {
     * @return All possible matches found
     */
   def findAllPossibleMatches(listing: Listing, keysToMatch: Array[String]): Seq[(String, Product)] = {
-    keysToMatch.flatMap {
-      keyToBeChecked =>
-        val maybeAMatch = database.get(keyToBeChecked)
-        maybeAMatch match {
-          case Some(product) =>
-            // Perform additional validations to check if the match is not a false positive
-            if (isFalsePositiveMatch(listing, product)) {
-              // Match was not confirmed
-              None
-            } else {
-              //match confirmed
-              Some((keyToBeChecked, product))
+    val manufacturerDbOption = database.get(listing.manufacturer).orElse(database.get(listing.alternativeManufacturer))
+    manufacturerDbOption match {
+      case Some(manufacturerDb) =>
+        keysToMatch.flatMap {
+          keyToBeChecked =>
+            val maybeAMatch = manufacturerDb.get(keyToBeChecked)
+            maybeAMatch match {
+              case Some(product) =>
+                Some((keyToBeChecked, product))
+              case None => None
             }
-          case None => None
         }
+      case None => Seq()
     }
   }
 
@@ -484,7 +485,7 @@ object SortableChallenge {
 
     val resultsFile = new File("results.txt")
 
-    // Group matches by model name
+    // Group matches by product name
     val results: Map[String, List[Listing]] = matched.groupBy(_._1.name).mapValues(_.map(_._2))
 
     resultsFile.write(
